@@ -10,12 +10,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import '../global.css';
 import ButtonPrimary from '../components/button';
 import { useNavigation } from '@react-navigation/native';
+import DatePicker from 'react-native-date-picker';
+import moment from 'moment';
 // import { TextInput } from 'react-native/types_generated/index';
 function SignupScreen() {
   const navigation = useNavigation();
   const [pressedOnnext, setpressedOnnext] = useState(false);
   const [physicalActivity, setPhysicalactivity] = useState(null);
   const [diet, setUserdiet] = useState(null);
+  const [date, setDate] = useState(new Date());
+  const [open, setOpen] = useState(false);
+  const [placeholder, setPlaceholder] = useState(null);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ImageBackground
@@ -77,13 +82,29 @@ function SignupScreen() {
                 keyboardType="number-pad"
               ></TextInput>
             </View>
-            <TextInput
-              placeholderTextColor="#000"
-              className="text-lg border-b-2 border-black my-5 text-black"
-              keyboardType="number-pad"
-              placeholder="How many months pregnant you are"
-            ></TextInput>
-
+            <Text
+              className="text-lg border-b-2 border-black my-5 text-black p-2"
+              onPress={() => {
+                setOpen(true);
+              }}
+            >
+              {moment(date).isSame(moment(), 'day')
+                ? 'Last Menstrual Period Date'
+                : moment(date).format('DD MMM YYYY')}
+            </Text>
+            <DatePicker
+              modal
+              open={open}
+              date={date}
+              mode="date"
+              onConfirm={date => {
+                setOpen(false);
+                setDate(date);
+              }}
+              onCancel={() => {
+                setOpen(false);
+              }}
+            />
             <TextInput
               placeholderTextColor="#000"
               className="text-lg border-b-2 border-black my-5 text-black"
@@ -224,12 +245,17 @@ function SignupScreen() {
                 </TouchableOpacity>
               </View>
             </View>
+            <TextInput
+              placeholderTextColor="#000"
+              className="text-lg border-b-2 border-black my-5 text-black"
+              placeholder="Set Your Password"
+            ></TextInput>
           </View>
           <View>
             <ButtonPrimary
               name="Submit"
               redirectnow={() => {
-                setpressedOnnext(true);
+                navigation.replace('GettingStarted');
               }}
             ></ButtonPrimary>
           </View>
